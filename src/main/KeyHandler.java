@@ -23,6 +23,75 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e ){
         int code = e.getKeyCode();
+
+        //TITLE STATE
+        if(gp.gameState == gp.titleState){
+            //FIRST TITLE
+            if(gp.ui.titleScreenState == 0){
+                if (code == KeyEvent.VK_W) {
+                    gp.ui.commandNum--;
+                    if(gp.ui.commandNum < 0){
+                        gp.ui.commandNum = 2;
+                    }
+                }
+                if (code == KeyEvent.VK_S) {
+                    gp.ui.commandNum++;
+                    if(gp.ui.commandNum > 2){
+                        gp.ui.commandNum = 0;
+                    }
+                }
+
+                if(code == KeyEvent.VK_ENTER){
+                    if(gp.ui.commandNum == 0){
+                        gp.ui.titleScreenState = 1;
+
+                    }
+                    if(gp.ui.commandNum == 1){
+                        //SOON
+                    }
+                    if(gp.ui.commandNum == 2){
+                        System.exit(0);
+                    }
+                }
+            }
+            //SECOND TITLE
+            else if(gp.ui.titleScreenState == 1){
+                if (code == KeyEvent.VK_W) {
+                    gp.ui.commandNum--;
+                    if(gp.ui.commandNum < 0){
+                        gp.ui.commandNum = 3;
+                    }
+                }
+                if (code == KeyEvent.VK_S) {
+                    gp.ui.commandNum++;
+                    if(gp.ui.commandNum > 3){
+                        gp.ui.commandNum = 0;
+                    }
+                }
+
+                if(code == KeyEvent.VK_ENTER){
+                    if(gp.ui.commandNum == 0){
+                        System.out.println("fighter");
+                        gp.gameState = gp.playState;
+                        gp.playMusic(0);
+                    }
+                    if(gp.ui.commandNum == 1){
+                        System.out.println("shooter");
+                        gp.gameState = gp.playState;
+                    }
+                    if(gp.ui.commandNum == 2){
+                        System.out.println("peaceful");
+                        gp.gameState = gp.playState;
+                    }
+                    if(gp.ui.commandNum == 3){
+                        gp.ui.titleScreenState = 0;
+                    }
+                }
+            }
+        }
+
+
+        //PLAY STATE
         if(gp.gameState == gp.playState) {
 
 
