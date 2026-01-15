@@ -40,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable{
     public UI ui = new UI(this);
     Thread gameThread;
     //Entity  and Object
-    public Player player = new Player(this,keyH);
+    public  Player player = new Player(this,keyH);
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] =new Entity[10];
 
@@ -139,11 +139,11 @@ public class GamePanel extends JPanel implements Runnable{
             tileM.draw(g2);
 
             //Object
-            for(int i = 0; i < obj.length; i++){
-                if(obj[i] != null){
-                    obj[i].draw(g2, this);
-                }
-            }
+    //            for(int i = 0; i < obj.length; i++){
+    //                if(obj[i] != null){
+    //                    obj[i].draw(g2, this);
+    //                }
+    //            }
 
             //NPC
             for(int i = 0; i < npc.length; i++){

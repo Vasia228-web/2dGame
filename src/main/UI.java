@@ -2,7 +2,11 @@ package main;
 
 
 
+import object.OBJ_Heart;
+import object.SuperObject;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -10,6 +14,7 @@ public class UI {
 
     Graphics2D g2;
     GamePanel gp;
+    BufferedImage heart_full, heart_half, heart_blank;
     Font purisaB;
     public String currentDialogue = "";
     public int commandNum = 0;
@@ -29,6 +34,14 @@ public class UI {
             e.printStackTrace();
         }
 
+        //CREATE HUB OBJECT
+        SuperObject heart = new OBJ_Heart(gp);
+        heart_blank = heart.image;
+        heart_full = heart.image2;
+        heart_half = heart.image3;
+
+
+
     }
 
     public void draw(Graphics2D g2) {
@@ -44,19 +57,59 @@ public class UI {
 
         //  PLAY
         if(gp.gameState == gp.playState){
-            //later
+            drawPlayerLife();
         }
 
         //  PAUSE
         if(gp.gameState == gp.pauseState){
             drawPauseScreen();
+            drawPlayerLife();
         }
 
         // DIALOGUE
         if(gp.gameState == gp.dialogueState){
             drawDialogueScreen();
+            drawPlayerLife();
         }
     }
+
+    public void drawPlayerLife(){
+
+        int x = gp.tileSize / 2;
+        int y = gp.tileSize / 2;
+        int i = 0;
+
+        // DRAW MAX LIFE
+        while(i < gp.player.maxLife / 2){
+            g2.drawImage(heart_blank, x, y, null);
+            i++;
+            x += gp.tileSize;
+        }
+
+        // RESET
+        x = gp.tileSize / 2;
+        y = gp.tileSize / 2;
+        i = 0;
+
+        int life = gp.player.life;
+
+        // DRAW CURRENT LIFE
+        while(i < gp.player.maxLife / 2){
+
+            if(life >= 2){
+                g2.drawImage(heart_full, x, y, null);
+                life -= 2;
+            }
+            else if(life == 1){
+                g2.drawImage(heart_half, x, y, null);
+                life -= 1;
+            }
+
+            i++;
+            x += gp.tileSize;
+        }
+    }
+
 
     public void drawTitleScreen(){
         if(titleScreenState == 0){

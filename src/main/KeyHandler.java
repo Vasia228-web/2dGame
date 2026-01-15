@@ -73,7 +73,7 @@ public class KeyHandler implements KeyListener {
                     if(gp.ui.commandNum == 0){
                         System.out.println("fighter");
                         gp.gameState = gp.playState;
-                        gp.playMusic(0);
+
                     }
                     if(gp.ui.commandNum == 1){
                         System.out.println("shooter");
