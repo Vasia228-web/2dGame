@@ -1,8 +1,6 @@
 package main;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -48,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable{
     public  Player player = new Player(this,keyH);
     public Entity obj[] = new Entity[10];
     public Entity npc[] =new Entity[10];
+    public Entity monster[] =new Entity[20];
     ArrayList<Entity>entityList = new ArrayList<>();
 
 
@@ -57,6 +56,8 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogueState = 3;
+    public final int characterState = 4;
+
 
 
     public GamePanel(){
@@ -71,7 +72,8 @@ public class GamePanel extends JPanel implements Runnable{
     public void setupGame(){
         aSetter.setObject();
         aSetter.setNPC();
-//        playMusic(0);
+        aSetter.setMonster();
+        //playMusic(0);
         gameState = titleState;
     }
 
@@ -112,10 +114,24 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(){
         if(gameState == playState){
+            //PLAYER
             player.update();
+            //NPC
             for(int i =0; i < npc.length; i++){
                 if(npc[i] != null){
                     npc[i].update();
+                }
+            }
+            //MONSTER
+            for(int i =0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    if(monster[i].alive == true && monster[i].dying == false){
+                        monster[i].update();
+                    }
+                    if(monster[i].alive == false){
+                        monster[i] = null;
+                    }
+
                 }
             }
         }
@@ -132,7 +148,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         //DEBUG
         long drawStart = 0;
-        if(keyH.checkDrawTime == true){
+        if(keyH.showDebugText == true){
             drawStart = System.nanoTime();
         }
 
@@ -155,6 +171,12 @@ public class GamePanel extends JPanel implements Runnable{
             for(int i = 0; i < obj.length; i++){
                 if(obj[i] != null){
                     entityList.add(obj[i]);
+                }
+            }
+
+            for(int i = 0; i < monster.length; i++){
+                if(monster[i] != null){
+                    entityList.add(monster[i]);
                 }
             }
 
@@ -183,13 +205,21 @@ public class GamePanel extends JPanel implements Runnable{
 
 
         //DEBUG
-        if(keyH.checkDrawTime == true){
+        if(keyH.showDebugText == true){
             long drawEnd = System.nanoTime();
             long passed = drawEnd - drawStart;
-            g2.setColor(Color.white);
-            g2.drawString("Draw Time:" + passed, 10, 400);
-            System.out.println("Draw Time: " + passed);
 
+            g2.setFont(new Font("Arial",Font.PLAIN,20));
+            g2.setColor(Color.white);
+            int x = 10;
+            int y = 400;
+            int lineHeight = 20;
+
+            g2.drawString("worldX " + player.worldX, x , y); y += lineHeight;
+            g2.drawString("worldY " + player.worldY, x , y); y += lineHeight;
+            g2.drawString("Col " + (player.worldX + player.solidArea.x) / tileSize, x , y); y += lineHeight;
+            g2.drawString("Row " + (player.worldY + player.solidArea.y) / tileSize, x , y); y += lineHeight;
+            g2.drawString("Draw Time:" + passed, x, y);
         }
 
         g2.dispose();
