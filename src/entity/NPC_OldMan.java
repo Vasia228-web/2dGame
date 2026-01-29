@@ -8,6 +8,7 @@ public class NPC_OldMan extends Entity {
     public NPC_OldMan(GamePanel gp){
         super(gp);
 
+        type = type_npc;
         direction = "down";
         speed = 1;
         getImage();

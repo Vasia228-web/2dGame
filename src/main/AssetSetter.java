@@ -2,10 +2,7 @@ package main;
 
 import entity.NPC_OldMan;
 import monster.M0N_GreenSlime;
-import object.OBJ_Boots;
-import object.OBJ_Door;
-import object.OBJ_Key;
-import object.OBJ_Chest;
+import object.*;
 
 public class AssetSetter {
 
@@ -17,6 +14,30 @@ public class AssetSetter {
 
 
     public void setObject(){
+        int i =0;
+        gp.obj[i] = new OBJ_Key(gp);
+        gp.obj[i].worldX = gp.tileSize*22;
+        gp.obj[i].worldY = gp.tileSize*25;
+        i++;
+        gp.obj[i] = new OBJ_Key(gp);
+        gp.obj[i].worldX = gp.tileSize*22;
+        gp.obj[i].worldY = gp.tileSize*26;
+        i++;
+        gp.obj[i] = new OBJ_Key(gp);
+        gp.obj[i].worldX = gp.tileSize*22;
+        gp.obj[i].worldY = gp.tileSize*27;
+        i++;
+        gp.obj[i] = new OBJ_Axe(gp);
+        gp.obj[i].worldX = gp.tileSize*33;
+        gp.obj[i].worldY = gp.tileSize*21;
+        i++;
+        gp.obj[i] = new OBJ_Shield_Blue(gp);
+        gp.obj[i].worldX = gp.tileSize*34;
+        gp.obj[i].worldY = gp.tileSize*22;
+        i++;
+        gp.obj[i] = new OBJ_Potion_Red(gp);
+        gp.obj[i].worldX = gp.tileSize*37;
+        gp.obj[i].worldY = gp.tileSize*22;
 
     }
 
@@ -51,6 +72,10 @@ public class AssetSetter {
         gp.monster[i] = new M0N_GreenSlime(gp);
         gp.monster[i].worldX = gp.tileSize*26;
         gp.monster[i].worldY = gp.tileSize*40;
+        i++;
+        gp.monster[i] = new M0N_GreenSlime(gp);
+        gp.monster[i].worldX = gp.tileSize*27;
+        gp.monster[i].worldY = gp.tileSize*41;
 
     }
 
