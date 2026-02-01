@@ -2,6 +2,7 @@ package monster;
 
 import entity.Entity;
 import main.GamePanel;
+import object.OBJ_Coin_Bronze;
 import object.OBJ_Rock;
 
 import java.util.Random;
@@ -100,6 +101,13 @@ public class M0N_GreenSlime extends Entity {
             actionLockCounter = 0;
             pathCounter = 0;
             onPath = true;
+    }
+
+    public void checkDrop(){
+        int i = new Random().nextInt(100)+1;
+        if(i < 50){
+            dropItem(new OBJ_Coin_Bronze(gp));
+        }
     }
 
 }

@@ -164,7 +164,11 @@ public class Player extends Entity{
                 int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
                 сontactMonster(monsterIndex);
 
-                //CHECK EVENT
+                //CHECK INTERACTIVETILE COLLISION
+                int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+
+
+            //CHECK EVENT
                 gp.eHandler.cheackEvent();
 
 
@@ -220,8 +224,15 @@ public class Player extends Entity{
             if(shotAvailableCounter < 80){
                 shotAvailableCounter++;
             }
+            if(life > maxLife){
+                life = maxLife;
+            }
+            if(mana > maxMana){
+                mana = maxMana;
+            }
 
-        }
+
+    }
 
     public void attacking(){
         spriteCounter ++;
@@ -252,6 +263,10 @@ public class Player extends Entity{
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex, attack);
 
+            //CHEACK INTERACTIVETILE COLLISION TO DESTROY IT
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+            damageInteractiveTile(iTileIndex);
+
             //AFTER CHECKING COLLISION RESTOR THE ORIGINAL DATA
             worldX = currentWorldX;
             worldY = currentWorldY;
@@ -267,17 +282,26 @@ public class Player extends Entity{
 
     public void pickUpObject(int i ){
         if(i != 999){
-            String text;
-            if(inventory.size() != maxInventorySize){
-                inventory.add(gp.obj[i]);
-                text = "Got a "+ gp.obj[i].name + "!";
-                gp.playSE(1);
+            //PICK UP ONLY
+            if(gp.obj[i].type == type_pickupOnly){
+                gp.obj[i].use(this);
+                gp.obj[i] = null;
             }
+            //PICK UP OBJECT TO INVENTORY
             else{
-                text = "Your inventory is full";
+                String text;
+                if(inventory.size() != maxInventorySize){
+                    inventory.add(gp.obj[i]);
+                    text = "Got a "+ gp.obj[i].name + "!";
+                    gp.playSE(1);
+                }
+                else{
+                    text = "Your inventory is full";
+                }
+                gp.ui.addMessage(text);
+                gp.obj[i] = null;
             }
-            gp.ui.addMessage(text);
-            gp.obj[i] = null;
+
         }
     }
 
@@ -329,6 +353,23 @@ public class Player extends Entity{
 
                 }
 
+            }
+        }
+    }
+
+    public void damageInteractiveTile(int i){
+            if(i != 999 && gp.iTile[i].destructible == true &&
+                gp.iTile[i].isCorrectItem(this) == true && gp.iTile[i].invincible == false){
+
+            gp.iTile[i].life--;
+            gp.iTile[i].playSE();
+            gp.iTile[i].invincible = true;
+
+            //GENERATE PARTICLE
+            generateParticle(gp.iTile[i],gp.iTile[i]);
+
+            if(gp.iTile[i].life == 0){
+                gp.iTile[i] = gp.iTile[i].getDestroyForm();
             }
         }
     }

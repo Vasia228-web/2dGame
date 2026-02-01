@@ -7,6 +7,8 @@ import java.util.Comparator;
 import entity.Entity;
 import entity.Player;
 import tile.TileManager;
+import tile_interactive.interactiveTile;
+
 import javax.swing.JPanel;
 
 
@@ -45,9 +47,11 @@ public class GamePanel extends JPanel implements Runnable{
 
     //ENTITY AND OBJECT
     public  Player player = new Player(this,keyH);
-    public Entity obj[] = new Entity[10];
+    public Entity obj[] = new Entity[20];
     public Entity npc[] =new Entity[10];
     public Entity monster[] =new Entity[20];
+    public interactiveTile iTile[] = new interactiveTile[50];
+    public ArrayList<Entity>particleList = new ArrayList<>();
     public ArrayList<Entity>projectileList = new ArrayList<>();
     ArrayList<Entity>entityList = new ArrayList<>();
 
@@ -75,6 +79,7 @@ public class GamePanel extends JPanel implements Runnable{
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
+        aSetter.setInteractive();
         //playMusic(0);
         gameState = titleState;
     }
@@ -131,6 +136,7 @@ public class GamePanel extends JPanel implements Runnable{
                         monster[i].update();
                     }
                     if(monster[i].alive == false){
+                        monster[i].checkDrop();
                         monster[i] = null;
                     }
 
@@ -145,6 +151,25 @@ public class GamePanel extends JPanel implements Runnable{
                     if(projectileList.get(i).alive == false){
                         projectileList.remove(i);
                     }
+                }
+            }
+
+            //PARTICLE
+            for(int i =0; i < particleList.size(); i++) {
+                if (particleList.get(i) != null) {
+                    if(particleList.get(i).alive == true){
+                        particleList.get(i).update();
+                    }
+                    if(particleList.get(i).alive == false){
+                        particleList.remove(i);
+                    }
+                }
+            }
+
+
+            for(int i = 0; i < iTile.length; i++){
+                if(iTile[i] != null){
+                    iTile[i].update();
                 }
             }
         }
@@ -173,6 +198,12 @@ public class GamePanel extends JPanel implements Runnable{
             //Tile
             tileM.draw(g2);
 
+            for(int i = 0; i < iTile.length; i++) {
+                if (iTile[i] != null) {
+                    iTile[i].draw(g2);
+                }
+            }
+
             //ADD ENTITY TO THE LIST
             entityList.add(player);
 
@@ -195,6 +226,11 @@ public class GamePanel extends JPanel implements Runnable{
             for(int i = 0; i < projectileList.size(); i++){
                 if(projectileList.get(i) != null){
                     entityList.add(projectileList.get(i));
+                }
+            }
+            for(int i = 0; i < particleList.size(); i++){
+                if(particleList.get(i) != null){
+                    entityList.add(particleList.get(i));
                 }
             }
 
