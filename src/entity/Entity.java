@@ -93,11 +93,11 @@ public class Entity {
     public void damageReaction(){}
     public void checkDrop(){}
     public void dropItem(Entity droppeditem){
-        for(int i = 1; i < gp.obj.length; i++){
-            if(gp.obj[i] == null){
-                gp.obj[i] = droppeditem;
-                gp.obj[i].worldX = worldX;
-                gp.obj[i].worldY = worldY;
+        for(int i = 1; i < gp.obj[1].length; i++){
+            if(gp.obj[gp.currentMap][i] == null){
+                gp.obj[gp.currentMap][i] = droppeditem;
+                gp.obj[gp.currentMap][i].worldX = worldX;
+                gp.obj[gp.currentMap][i].worldY = worldY;
                 break;
             }
         }
@@ -156,7 +156,7 @@ public class Entity {
             int dx = random.nextInt(-2,3);
             int dy = random.nextInt(-2,3);
 
-            Particle p = new Particle(gp, generator, color, size, speed, maxLife, dx, dy);
+            Particle p = new Particle(gp, target, color, size, speed, maxLife, dx, dy);
             gp.particleList.add(p);
         }
     }
