@@ -5,7 +5,7 @@ import java.awt.*;
 public class EventHandler {
     GamePanel gp;
     EventRect eventReact[][][];
-    int     previousEventX , previousEventY;
+    int previousEventX , previousEventY;
     boolean canTouchEvent = true;
     int tempMap, tempCol, tempRow;
 
@@ -93,7 +93,7 @@ public class EventHandler {
         return hit;
     }
 
-    public  void damagePit(int gameState){
+    public void damagePit(int gameState){
         gp.gameState = gameState;
         gp.ui.currentDialogue = "fi atent!";
         gp.player.life -= 1;

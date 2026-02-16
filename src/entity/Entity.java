@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Entity {
@@ -43,7 +44,6 @@ public class Entity {
     public int actionLockCounter = 0;
     public int dyingCounter = 0;
     public int shotAvailableCounter = 0;
-    public int pathCounter = 0;
     int hpBarCounter =0;
 
 
@@ -78,17 +78,19 @@ public class Entity {
     public final int type_pickupOnly = 7;
 
     //ITEM ATTRIBUTES
+    public ArrayList<Entity> inventory = new ArrayList<>();
+    public final int maxInventorySize = 20;
     public int value;
     public int attackValue;
     public int defenseValue;
     public String description = "";
     public int useCost;
+    public int price;
 
 
     public  Entity (GamePanel gp){
         this.gp = gp;
     }
-
     public void setAction(){}
     public void damageReaction(){}
     public void checkDrop(){}
@@ -126,7 +128,6 @@ public class Entity {
         }
 
     }
-
     public void use(Entity entity){}
     public Color getParticleColor(){
         Color color = null;
@@ -160,18 +161,7 @@ public class Entity {
             gp.particleList.add(p);
         }
     }
-    public void update(){
-        setAction();
-
-        //AFTER 4 SECOND MONSTER STOP FOLOW YOU
-        if(onPath){
-            pathCounter++;
-            if(pathCounter >= 240){
-                onPath = false;
-                pathCounter = 0;
-            }
-        }
-
+    public void checkCollision(){
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
@@ -183,6 +173,10 @@ public class Entity {
         if(this.type == type_monster && contactPlayer == true){
             damagePlayer(attack);
         }
+    }
+    public void update(){
+        setAction();
+        checkCollision();
 
         if(collisionOn == false){
             switch(direction) {
@@ -211,7 +205,6 @@ public class Entity {
             shotAvailableCounter++;
         }
     }
-
     public void damagePlayer(int attack){
         if(gp.player.invincible == false){
             gp.playSE(7);
@@ -224,7 +217,6 @@ public class Entity {
             gp.player.invincible = true;
         }
     }
-
     public void draw(Graphics2D g2){
         BufferedImage image = null;
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
@@ -306,12 +298,9 @@ public class Entity {
                 alive = false;
             }
         }
-
-
     public void changeAlpha(Graphics2D g2, float alphaValue){
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alphaValue));
     }
-
     public BufferedImage setup(String imageName,int width, int height){
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
@@ -324,5 +313,84 @@ public class Entity {
         }
         return image;
     }
+    public void searchPath(int goalCol, int goalRow){
+        int startCol = (worldX + solidArea.x) / gp.tileSize;
+        int startRow = (worldY + solidArea.y) / gp.tileSize;
 
+        gp.pFinder.setNode(startCol,startRow, goalCol, goalRow);
+
+        if(gp.pFinder.search() == true){
+
+            if(gp.pFinder.pathList.size() > 0) {
+
+                // NEXT WORLDX & WORLDY
+                int nextX = gp.pFinder.pathList.get(0).col * gp.tileSize;
+                int nextY = gp.pFinder.pathList.get(0).row * gp.tileSize;
+
+                // ENTITY SOLID AREA POSITION
+                int enLeftX = worldX + solidArea.x;
+                int enRightX = worldX + solidArea.x + solidArea.width;
+                int enTopY = worldY + solidArea.y;
+                int enBottomY = worldY + solidArea.y + solidArea.height;
+
+
+                if(enTopY > nextY && enLeftX >= nextX && enRightX <= nextX + gp.tileSize ){
+                    direction = "up";
+                }
+                else if(enTopY < nextY && enLeftX >= nextX && enRightX <= nextX + gp.tileSize){
+                    direction = "down";
+                }
+                else if (enTopY >= nextY && enBottomY <= nextY + gp.tileSize){
+                    //LEFT OR RIGHT
+                    if(enLeftX > nextX){
+                        direction = "left";
+                    }
+                    if(enLeftX < nextX){
+                        direction = "right";
+                    }
+                }
+                else if(enTopY > nextY && enLeftX > nextX){
+                    //UP OR LEFT
+                    direction = "up";
+                    checkCollision();
+                    if(collisionOn == true){
+                        direction = "left";
+                    }
+                }
+                else if(enTopY > nextY && enLeftX < nextX){
+                    //UP OR RIGHT
+                    direction = "up";
+                    checkCollision();
+                    if(collisionOn == true){
+                        direction = "right";
+                    }
+                }
+                else if(enTopY < nextY && enLeftX > nextX){
+                    //DOWN OR LEFT
+                    direction = "down";
+                    checkCollision();
+                    if(collisionOn == true){
+                        direction = "left";
+                    }
+                }
+                else if(enTopY < nextY && enLeftX < nextX){
+                    //DOWN OR RIGHT
+                    direction = "down";
+                    checkCollision();
+                    if(collisionOn == true){
+                        direction = "right";
+                    }
+                }
+
+                int nextCol = gp.pFinder.pathList.get(0).col;
+                int nextRow = gp.pFinder.pathList.get(0).row;
+                if(nextCol == goalCol && nextRow == goalRow){
+                    onPath = false;
+                }
+            }
+        }
+        else {
+            onPath = false;
+        }
+    }
 }

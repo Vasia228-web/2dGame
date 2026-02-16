@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import ai.PathFinder;
 import entity.Entity;
 import entity.Player;
 import tile.TileManager;
@@ -19,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable{
     final int originalTileSize = 16; //16x16 tile 
     final int scale = 3;
 
-    public final int tileSize = originalTileSize * scale; //48x48 tile 
+    public final int tileSize = originalTileSize * scale; //48x48 tile
     public final int maxScreenCol = 20;
     public final int maxScreenRow = 14;
     public final int screenWidth = tileSize * maxScreenCol;//768 pixels
@@ -41,13 +42,14 @@ public class GamePanel extends JPanel implements Runnable{
     //FPS
     int FPS = 60;
 
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
     public EventHandler eHandler = new EventHandler(this);
     Sound music = new Sound();
     Sound se = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    public PathFinder pFinder = new PathFinder(this);
     public UI ui = new UI(this);
     Config config = new Config(this);
     Thread gameThread;
@@ -72,6 +74,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int optionState = 5;
     public final int gameOverState = 6;
     public final int transitionState = 7;
+    public final int tradeState = 8;
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));

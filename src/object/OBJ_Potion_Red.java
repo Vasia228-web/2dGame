@@ -12,6 +12,7 @@ public class OBJ_Potion_Red extends Entity {
         type=type_consumable;
         value = 2;
         name ="Red Potion";
+        price =2;
         down1 = setup("/res/objects/potion_red",gp.tileSize,gp.tileSize);
         description = "["+name+"]\n"+ "Heals your live by " + value;
     }
