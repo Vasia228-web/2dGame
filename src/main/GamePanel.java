@@ -9,6 +9,7 @@ import ai.PathFinder;
 import entity.Entity;
 import entity.Player;
 import environment.EnvironmentManager;
+import tile.Map;
 import tile.TileManager;
 import tile_interactive.interactiveTile;
 
@@ -53,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable{
     public PathFinder pFinder = new PathFinder(this);
     public EnvironmentManager eManager = new EnvironmentManager(this);
     public UI ui = new UI(this);
+    Map map = new Map(this);
     Config config = new Config(this);
     Thread gameThread;
 
@@ -78,6 +80,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int transitionState = 7;
     public final int tradeState = 8;
     public final int sleepState = 9;
+    public final int mapState = 10;
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -86,8 +89,6 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(keyH);
         this.setFocusable(true);
     }
-
-
     public void setupGame(){
         aSetter.setObject();
         aSetter.setNPC();
@@ -232,7 +233,6 @@ public class GamePanel extends JPanel implements Runnable{
 
 
     }
-
     public void drawToTempScreen(){
         //DEBUG
         long drawStart = 0;
@@ -243,6 +243,9 @@ public class GamePanel extends JPanel implements Runnable{
         //TITLE STATE
         if(gameState == titleState){
             ui.draw(g2);
+        }
+        else if(gameState == mapState){
+            map.drawFullMapScreen(g2);
         }
         else{
             //Tile
@@ -305,6 +308,9 @@ public class GamePanel extends JPanel implements Runnable{
             //ENVIRONMENT
             eManager.draw(g2);
 
+            //MINI MAP
+            map.drawMiniMap(g2);
+
             //UI
             ui.draw(g2);
         }
@@ -328,8 +334,6 @@ public class GamePanel extends JPanel implements Runnable{
             g2.drawString("Draw Time:" + passed, x, y);
         }
     }
-
-
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -364,18 +368,15 @@ public class GamePanel extends JPanel implements Runnable{
         // STATE
         gameState = titleState;
     }
-
     public void playMusic(int i){
         music.setFile(i);
         music.play();
         music.loop();
 
     }
-
     public void stopMusic(){
         music.stop();
     }
-
     public void playSE(int i ){
         se.setFile(i);
         se.play();

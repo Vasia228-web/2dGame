@@ -18,7 +18,7 @@ public class UI {
     Graphics2D g2;
     GamePanel gp;
     BufferedImage heart_full, heart_half, heart_blank, mana_full, mana_blank,coin;
-    Font purisaB;
+    public Font purisaB;
     public String currentDialogue = "";
     public int commandNum = 0;
     public int titleScreenState = 0 ; // state 0 the first screen : 1 the second screen
