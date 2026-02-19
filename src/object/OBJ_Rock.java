@@ -3,12 +3,15 @@ package object;
 import entity.Projectile;
 import main.GamePanel;
 
+import java.awt.*;
+
 public class OBJ_Rock extends Projectile {
     GamePanel gp;
 
     public OBJ_Rock(GamePanel gp){
         super(gp);
         this.gp = gp;
+
 
         name = "Rock";
         speed = 6;
@@ -29,5 +32,24 @@ public class OBJ_Rock extends Projectile {
         left2 = setup("/res/projectile/rock_down_1",gp.tileSize, gp.tileSize);
         right1 = setup("/res/projectile/rock_down_1",gp.tileSize, gp.tileSize);
         right2 = setup("/res/projectile/rock_down_1",gp.tileSize, gp.tileSize);
+    }
+
+
+    public Color getParticleColor(){
+        Color color = new Color(65,50,30);
+        return color;
+    }
+
+    public int getParticleSize(){
+        int size =6;
+        return size;
+    }
+    public int getParticleSpeed(){
+        int speed =1;
+        return speed;
+    }
+    public int getParticleMaxLife(){
+        int maxLife =20;
+        return maxLife;
     }
 }

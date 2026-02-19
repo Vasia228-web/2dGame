@@ -14,12 +14,10 @@ public class KeyHandler implements KeyListener {
     public KeyHandler(GamePanel gp){
         this.gp = gp;
     }
-
     @Override
     public void keyTyped(KeyEvent e ){
 
     }
-
     @Override
     public void keyPressed(KeyEvent e ){
         int code = e.getKeyCode();
@@ -59,9 +57,6 @@ public class KeyHandler implements KeyListener {
             tradeState(code);
         }
     }
-
-
-
     public void playState(int code){
 
         if (code == KeyEvent.VK_W) {

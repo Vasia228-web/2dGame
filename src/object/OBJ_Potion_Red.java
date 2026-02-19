@@ -12,13 +12,15 @@ public class OBJ_Potion_Red extends Entity {
         type=type_consumable;
         value = 2;
         name ="Red Potion";
+        stackable = true;
         price =2;
         down1 = setup("/res/objects/potion_red",gp.tileSize,gp.tileSize);
         description = "["+name+"]\n"+ "Heals your live by " + value;
     }
 
-    public void use(Entity entity){
+    public boolean use(Entity entity){
             gp.playSE(2);
             entity.life += value;
+            return true;
     }
 }

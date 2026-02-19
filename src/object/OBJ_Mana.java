@@ -19,10 +19,11 @@ public class OBJ_Mana extends Entity {
 
     }
 
-    public void use(Entity entity){
+    public boolean use(Entity entity){
         gp.playSE(1);
         gp.ui.addMessage("Mana "+ value);
         entity.mana += value;
+        return true;
 
     }
 

@@ -32,6 +32,18 @@ public class AssetSetter {
         gp.obj[mapNum][i].worldX = gp.tileSize*22;
         gp.obj[mapNum][i].worldY = gp.tileSize*27;
         i++;
+        gp.obj[mapNum][i] = new OBJ_Key(gp);
+        gp.obj[mapNum][i].worldX = gp.tileSize*22;
+        gp.obj[mapNum][i].worldY = gp.tileSize*28;
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Key(gp);
+        gp.obj[mapNum][i].worldX = gp.tileSize*22;
+        gp.obj[mapNum][i].worldY = gp.tileSize*29;
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Key(gp);
+        gp.obj[mapNum][i].worldX = gp.tileSize*22;
+        gp.obj[mapNum][i].worldY = gp.tileSize*30;
+        i++;
         gp.obj[mapNum][i] = new OBJ_Axe(gp);
         gp.obj[mapNum][i].worldX = gp.tileSize*33;
         gp.obj[mapNum][i].worldY = gp.tileSize*21;
@@ -43,6 +55,14 @@ public class AssetSetter {
         gp.obj[mapNum][i] = new OBJ_Potion_Red(gp);
         gp.obj[mapNum][i].worldX = gp.tileSize*37;
         gp.obj[mapNum][i].worldY = gp.tileSize*22;
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Door(gp);
+        gp.obj[mapNum][i].worldX = gp.tileSize*30;
+        gp.obj[mapNum][i].worldY = gp.tileSize*21;
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Chest(gp, new OBJ_Fireball(gp));
+        gp.obj[mapNum][i].worldX = gp.tileSize*21;
+        gp.obj[mapNum][i].worldY = gp.tileSize*19;
 
     }
 

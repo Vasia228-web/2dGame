@@ -7,6 +7,7 @@ public class OBJ_Axe extends Entity {
     public OBJ_Axe(GamePanel gp){
         super(gp);
 
+        knockBackPower = 5;
         type = type_axe;
         name ="Axe";
         down1 = setup("/res/objects/axe",gp.tileSize, gp.tileSize);
