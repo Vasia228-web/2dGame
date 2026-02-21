@@ -25,7 +25,6 @@ public class Map extends TileManager{
             worldMap[i] = new BufferedImage(worldMapWidth, worldMapHeight, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = (Graphics2D)worldMap[i].createGraphics();
 
-
             int col =0;
             int row =0;
 
@@ -47,12 +46,12 @@ public class Map extends TileManager{
     public void drawFullMapScreen(Graphics2D g2){
 
         //Background Color
-        g2.setColor(Color.black);
+        g2.setColor(new Color(59,143,202));
         g2.fillRect(0,0,gp.screenWidth,gp.screenHeight);
 
         //DRAW MAP
-        int width = 500;
-        int height = 500;
+        int width = 600;
+        int height = 600;
         int x = gp.screenWidth /2 - width/2;
         int y = gp.screenHeight /2 - height/2;
         g2.drawImage(worldMap[gp.currentMap],x,y,width,height,null);

@@ -133,7 +133,7 @@ public class UI {
                 gp.eManager.lighting.dayState = gp.eManager.lighting.day;
                 gp.eManager.lighting.dayCounter = 0;
                 gp.gameState = gp.playState;
-                gp.player.getPlayerImage();
+                gp.player.getImage();
             }
         }
     }
@@ -947,7 +947,8 @@ public class UI {
             g2.drawString(">",textX -24, textY);
             if(gp.keyH.enterPressed == true){
                 subState =0;
-                gp.resetGame();
+//                gp.resetGame();
+                gp.resetGameFinal(true);
             }
         }
         //NO

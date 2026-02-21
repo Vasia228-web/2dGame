@@ -3,6 +3,7 @@ package main;
 import entity.NPC_Merchant;
 import entity.NPC_OldMan;
 import monster.M0N_GreenSlime;
+import monster.MON_Orc;
 import object.*;
 import tile_interactive.IT_DryTree;
 
@@ -13,7 +14,6 @@ public class AssetSetter {
     public AssetSetter(GamePanel gp){
         this.gp = gp;
     }
-
 
     public void setObject(){
         for(int i = 0; i < gp.obj[1].length; i++) gp.obj[gp.currentMap][i] = null;
@@ -65,7 +65,6 @@ public class AssetSetter {
         gp.obj[mapNum][i].worldY = gp.tileSize*19;
 
     }
-
     public void setNPC(){
         int mapNum =0;
         int i =0;
@@ -79,7 +78,6 @@ public class AssetSetter {
         gp.npc[mapNum][i].worldX = gp.tileSize*12;
         gp.npc[mapNum][i].worldY = gp.tileSize*7;
     }
-
     public void setMonster(){
         for(int i = 0; i < gp.monster[1].length; i++) gp.monster[gp.currentMap][i] = null;
 
@@ -108,9 +106,12 @@ public class AssetSetter {
         gp.monster[mapNum][i] = new M0N_GreenSlime(gp);
         gp.monster[mapNum][i].worldX = gp.tileSize*27;
         gp.monster[mapNum][i].worldY = gp.tileSize*41;
+        i++;
+        gp.monster[mapNum][i] = new MON_Orc(gp);
+        gp.monster[mapNum][i].worldX = gp.tileSize*28;
+        gp.monster[mapNum][i].worldY = gp.tileSize*21;
 
     }
-
     public void setInteractive(){
         for(int i = 0; i < gp.iTile[1].length; i++) gp.iTile[gp.currentMap][i] = null;
 

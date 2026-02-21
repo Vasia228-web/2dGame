@@ -14,5 +14,7 @@ public class OBJ_Sword_Normal extends Entity {
         description = "[ " +name + " ]\n GUTS SWORD.";
         attackArea.height = 36;
         attackArea.width = 36;
+        motion1_duration = 5;
+        motion2_duration = 25;
     }
 }

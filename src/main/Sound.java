@@ -28,8 +28,9 @@ public class Sound {
         soundURL[11] = getClass().getResource("/res/sound/gameover.wav");
         soundURL[12] = getClass().getResource("/res/sound/stairs.wav");
         soundURL[13] = getClass().getResource("/res/sound/sleep.wav");
+        soundURL[14] = getClass().getResource("/res/sound/blocked.wav");
+        soundURL[15] = getClass().getResource("/res/sound/parry.wav");
     }
-
     public void setFile(int i){
         try{
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
@@ -41,7 +42,6 @@ public class Sound {
             e.printStackTrace();
         }
     }
-
     public void play(){
         clip.start();
     }

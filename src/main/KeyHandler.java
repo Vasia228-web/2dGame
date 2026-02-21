@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     GamePanel gp;
-    public boolean upPressed, downPressed,  leftPressed, rightPressed , enterPressed, shotKeyPressed;
+    public boolean upPressed, downPressed,  leftPressed, rightPressed , enterPressed, shotKeyPressed, spacePressed;
 
     // DEBUG
     boolean showDebugText = false;
@@ -34,7 +34,6 @@ public class KeyHandler implements KeyListener {
         else if(gp.gameState == gp.pauseState){
             pauseState(code);
         }
-
             //DIALOGUE STATE
         else if(gp.gameState == gp.dialogueState){
             dialogueState(code);
@@ -42,7 +41,6 @@ public class KeyHandler implements KeyListener {
             //CHARACTER STATE
         else if (gp.gameState == gp.characterState) {
             characterState(code);
-
         }
         //OPTION STATE
         else if (gp.gameState == gp.optionState) {
@@ -56,6 +54,7 @@ public class KeyHandler implements KeyListener {
         else if (gp.gameState == gp.tradeState) {
             tradeState(code);
         }
+        //MINIMAP STATE
         else if (gp.gameState == gp.mapState) {
             mapState(code);
         }
@@ -86,6 +85,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_F) {
             shotKeyPressed = true;
+        }
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = true;
         }
         if (code == KeyEvent.VK_ESCAPE) {
             gp.gameState = gp.optionState;
@@ -334,16 +336,15 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_ENTER){
             if(gp.ui.commandNum == 0){
                 gp.gameState = gp.playState;
-                gp.retry();
+                gp.resetGameFinal(false);
                 gp.keyH.enterPressed = false;
             }
             if(gp.ui.commandNum == 1){
                 gp.gameState = gp.titleState;
-                gp.restart();
+                gp.resetGameFinal(true);
             }
         }
     }
-
     @Override
     public void keyReleased(KeyEvent e ){
         int code = e.getKeyCode();
@@ -364,6 +365,12 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_F) {
             shotKeyPressed = false;
+        }
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = false;
+        }
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = false;
         }
     }
 }
