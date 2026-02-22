@@ -6,10 +6,11 @@ import main.GamePanel;
 public class OBJ_Door extends Entity {
 
         GamePanel gp;
+    public static final String objName ="Door";
         public  OBJ_Door(GamePanel gp){
             super(gp);
             this.gp = gp;
-            name = "Door";
+            name = objName;
             down1 = setup("/res/objects/door",gp.tileSize,gp.tileSize);
             collision = true;
             type = type_obstacle;
@@ -20,11 +21,12 @@ public class OBJ_Door extends Entity {
             solidArea.height =32;
             solidAreaDefaultX =solidArea.x;
             solidAreaDefaultY =solidArea.y;
-
+            setDialogue();
         }
-
+        public void setDialogue(){
+            dialogues[0][0] ="You need a key!";
+        }
         public void interact(){
-            gp.gameState = gp.dialogueState;
-            gp.ui.currentDialogue = "Door is locked";
+            startDialogue(this,0);
         }
     }

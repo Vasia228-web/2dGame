@@ -43,10 +43,7 @@ public class Player extends Entity{
         startingProjectile = new OBJ_Fireball(gp);
 
         setDefaultValues();
-        getImage();
-        getAttackImage();
-        getGuardImage();
-        setItems();
+        setDialogue();
     }
 
     public void setDefaultPositions(){
@@ -54,11 +51,16 @@ public class Player extends Entity{
         worldY = gp.tileSize *21;
         direction = "down";
     }
-    public void restoreLifeAndMana(){
+    public void restoreStatus(){
         life = maxLife;
         mana = maxMana;
         invincible =false;
         transparent = false;
+        attacking = false;
+        guard = false;
+        knockBack =false;
+        lightUpdated = true;
+        speed = defaultSpeed;
     }
     public void setDefaultValues(){
         worldX = gp.tileSize * 22;
@@ -79,10 +81,15 @@ public class Player extends Entity{
         strength =1; //THE MORE STRENGTH HE HAS THE MORE DAMAGE HE GIVES.
         dexterity = 1;//THE MORE DEXTERITY HE HAS THE LESS DAMAGE HE RECEIVES
         exp =0;
-        nexLevelExp = 5;
-        coin = 0;
+        nextLevelExp = 5;
+        coin = 50;
+        currentLight = null;
         attack =getAttack();//THE TOTAL ATTACK VALUE IS DECIDED BY STRENGTH AND WEAPON
         defense = getDefense();//THE TOTAL DEFENSE VALUE IS DECIDED BY DEXTERITY AND SHIELD
+        getImage();
+        getAttackImage();
+        getGuardImage();
+        setItems();
     }
     public void setItems(){
         inventory.clear();
@@ -92,6 +99,9 @@ public class Player extends Entity{
         inventory.add(new OBJ_Lantern(gp));
         inventory.add(new OBJ_Tent(gp));
     }
+    public void setDialogue(){
+        dialogues[0][0] ="You are level "+ level+ " now!\n Now you are more stronger";
+    }
     public int getAttack(){
         attackArea = currentWeapon.attackArea;
         motion1_duration = currentWeapon.motion1_duration;
@@ -100,6 +110,24 @@ public class Player extends Entity{
     }
     public int getDefense(){
         return defense = dexterity * currentShield.defenseValue;
+    }
+    public int getCurrentWeaponSlot(){
+        int currentWeaponSlot =0;
+        for(int i = 0; i< inventory.size(); i++){
+            if(inventory.get(i) == currentWeapon){
+                currentWeaponSlot = i;
+            }
+        }
+        return currentWeaponSlot;
+    }
+    public int getCurrentShieldSlot(){
+        int currentShieldSlot =0;
+        for(int i = 0; i< inventory.size(); i++){
+            if(inventory.get(i) == currentShield){
+                currentShieldSlot = i;
+            }
+        }
+        return currentShieldSlot;
     }
     public void getImage(){
         up1 = setup("/res/player/boy_up_1",gp.tileSize,gp.tileSize);
@@ -338,7 +366,6 @@ public class Player extends Entity{
         if(gp.keyH.enterPressed == true){
             if(i != 999){
                 attackCanceled = true;
-                gp.gameState = gp.dialogueState;
                 gp.npc[gp.currentMap][i].speak();
             }
         }
@@ -411,15 +438,16 @@ public class Player extends Entity{
         }
     }
     public void checkLevelUp(){
-        if(exp >= nexLevelExp){
+        if(exp >= nextLevelExp){
             level++;
-            nexLevelExp = nexLevelExp * 2;
+            nextLevelExp = nextLevelExp * 2;
             dexterity++;
             defense = getDefense();
 
             gp.playSE(8);
             gp.gameState = gp.dialogueState;
-            gp.ui.currentDialogue ="You are level "+ level+ " now!";
+            setDialogue();
+            startDialogue(this,0);
         }
     }
     public int searchItemInInventory(String itemName){
@@ -433,9 +461,10 @@ public class Player extends Entity{
     }
     public boolean canObtainItem(Entity item){
         boolean canObtain = false;
+        Entity newItem = gp.eGenerator.getObject(item.name);
         //CHECK IF STACKEBLE
-        if(item.stackable == true){
-            int index = searchItemInInventory(item.name);
+        if(newItem.stackable == true){
+            int index = searchItemInInventory(newItem.name);
             if(index != 999){
                 inventory.get(index).amount++;
                 canObtain = true;
@@ -443,7 +472,7 @@ public class Player extends Entity{
             //NEW ITEM SO NEED TO CHEK VACANCY
             else {
                 if(inventory.size() != maxInventorySize){
-                    inventory.add(item);
+                    inventory.add(newItem);
                     canObtain = true;
                 }
             }
@@ -451,7 +480,7 @@ public class Player extends Entity{
         //NOT STACKABLE ITEM
         else{
             if(inventory.size() != maxInventorySize){
-                inventory.add(item);
+                inventory.add(newItem);
                 canObtain = true;
             }
         }

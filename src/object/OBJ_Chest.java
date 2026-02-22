@@ -5,14 +5,12 @@ import main.GamePanel;
 
 public class OBJ_Chest extends Entity {
     GamePanel gp;
-    boolean opened = false;
-    Entity loot;
+    public static final String objName ="Chest";
 
-    public OBJ_Chest(GamePanel gp ,Entity loot) {
+    public OBJ_Chest(GamePanel gp) {
         super(gp);
         this.gp = gp;
-        this.loot = loot;
-        name = "Chest";
+        name = objName;
         type = type_obstacle;
         image= setup("/res/objects/chest",gp.tileSize,gp.tileSize);
         image2 = setup("/res/objects/chest_opened",gp.tileSize,gp.tileSize);
@@ -27,25 +25,30 @@ public class OBJ_Chest extends Entity {
         solidAreaDefaultY = solidArea.y;
 
     }
+    public void setLoot(Entity loot){
+        this.loot = loot;
+        setDialogue();
+    }
+    public void setDialogue(){
+        dialogues[0][0] = "You open the chest and get \n" + loot.name+" !";
+        dialogues[1][0] = "You cannot carry any more!";
+        dialogues[2][0] = "It's empty";
+    }
     public void interact(){
         gp.gameState = gp.dialogueState;
         if(opened == false){
             gp.playSE(3);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("Chest open" + loot.name+"!");
+            startDialogue(this,0);
             if(gp.player.canObtainItem(loot) == false){
-                sb.append("\n you cannot carry any more!");
+                startDialogue(this,1);
             }
             else{
-                sb.append("\n you pick up the " + loot.name + "!");
                 down1 = image2;
                 opened = true;
             }
-            gp.ui.currentDialogue = sb.toString();
         }
         else{
-            gp.ui.currentDialogue = "it's empty";
+            startDialogue(this,2);
         }
     }
 }

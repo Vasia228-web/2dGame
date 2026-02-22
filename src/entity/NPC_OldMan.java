@@ -13,8 +13,8 @@ public class NPC_OldMan extends Entity {
         speed = 1;
         getImage();
         setDialogue();
+        dialogueSet = -1;
     }
-
     public void getImage(){
 
         up1 = setup("/res/npc/oldman_up_1",gp.tileSize,gp.tileSize);
@@ -27,14 +27,16 @@ public class NPC_OldMan extends Entity {
         right2 = setup("/res/npc/oldman_right_2",gp.tileSize,gp.tileSize);
 
     }
-
     public void setDialogue(){
-        dialogues[0] ="Norok mue ce mai fach";
-        dialogues[1] = "Shi cum ai venit pe acesta loc \nsa printh ceva gajich?";
-        dialogues[2] = "Ka eu ame as forte batran \npantrue futai";
-        dialogues[3] = "Sa ai norok shi numa an ainte";
-    }
+        dialogues[0][0] ="Well, who knows what will lead \nyou to this island?";
+        dialogues[0][1] = "Be careful, there are many \nmonsters hiding here.";
+        dialogues[0][2] = "I heard there's a treasure\n dungeon somewhere here.";
 
+        dialogues[1][0] = "You can go to the lake \nto drink water.";
+        dialogues[1][1] = "I always drink it, it heals me.";
+
+        dialogues[2][0] = "Come on, friend, be careful, \nthere are a lot of strange things here.";
+    }
     public void setAction(){
 
         if(onPath == true){
@@ -64,10 +66,14 @@ public class NPC_OldMan extends Entity {
             }
         }
     }
-
     public void speak(){
-        super.speak();
-        onPath = true;
+        turnToPLayer();
+        startDialogue(this,dialogueSet);
+        dialogueSet++;
+        if(dialogues[dialogueSet][0] == null){
+            dialogueSet--;
+        }
+//        onPath = true;
     }
 }
 

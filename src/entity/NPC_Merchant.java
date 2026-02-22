@@ -30,7 +30,12 @@ public class NPC_Merchant extends Entity{
     }
 
     public void setDialogue(){
-        dialogues[0] ="Okey you find me now your \ngame will be more dificult";
+        dialogues[0][0] ="Okey you find me now your \ngame will be more dificult";
+        dialogues[1][0] ="See you later";
+        dialogues[2][0] ="You don't have enough coins";
+        dialogues[3][0] ="Your inventory is full!";
+        dialogues[4][0] ="You can't sell an equipped item!";
+
     }
     public void setItems(){
         inventory.add(new OBJ_Potion_Red(gp));

@@ -1,5 +1,7 @@
 package main;
 
+import entity.Entity;
+
 import java.awt.*;
 
 public class EventHandler {
@@ -8,10 +10,11 @@ public class EventHandler {
     int previousEventX , previousEventY;
     boolean canTouchEvent = true;
     int tempMap, tempCol, tempRow;
-
+    Entity eventMaster;
 
     public EventHandler(GamePanel gp){
         this.gp = gp;
+        eventMaster = new Entity(gp);
         eventReact = new EventRect[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 
         int map = 0;
@@ -36,8 +39,12 @@ public class EventHandler {
                 map++;
             }
         }
+        setDialogue();
     }
-
+    public void setDialogue(){
+        eventMaster.dialogues[0][0] = "You step into a trap";
+        eventMaster.dialogues[1][0] = "You feel better now and \nCheck point";
+    }
     public void cheackEvent(){
 
         //CHEK IF PLAYER GET AWAY FROM EVENT
@@ -63,7 +70,6 @@ public class EventHandler {
             }
         }
     }
-
     public boolean hit(int map, int col, int row, String reqDirection){
 
         boolean hit = false;
@@ -92,22 +98,21 @@ public class EventHandler {
         }
         return hit;
     }
-
     public void damagePit(int gameState){
         gp.gameState = gameState;
-        gp.ui.currentDialogue = "fi atent!";
+        eventMaster.startDialogue(eventMaster,0);
         gp.player.life -= 1;
         canTouchEvent = false;
     }
-
     public void healinPool(int gameState){
         if(gp.keyH.enterPressed == true){
             gp.gameState = gameState;
             gp.player.attackCanceled = true;
-            gp.ui.currentDialogue = "ai tras un 50 de vodka";
+            eventMaster.startDialogue(eventMaster,1);
             gp.player.life = gp.player.maxLife;
             gp.player.mana = gp.player.maxMana;
             gp.aSetter.setMonster();
+            gp.saveLoad.save();
         }
     }
     public void teleport(int map,int col,int row){

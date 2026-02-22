@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import ai.PathFinder;
+import data.SaveLoad;
 import entity.Entity;
 import entity.Player;
 import environment.EnvironmentManager;
@@ -44,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable{
     //FPS
     int FPS = 60;
 
+    //SYSTEM
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
     public EventHandler eHandler = new EventHandler(this);
@@ -53,10 +55,12 @@ public class GamePanel extends JPanel implements Runnable{
     public AssetSetter aSetter = new AssetSetter(this);
     public PathFinder pFinder = new PathFinder(this);
     public EnvironmentManager eManager = new EnvironmentManager(this);
+    SaveLoad saveLoad =new SaveLoad(this);
     public UI ui = new UI(this);
     Map map = new Map(this);
     Config config = new Config(this);
     Thread gameThread;
+    public EntityGenerator eGenerator = new EntityGenerator(this);
 
     //ENTITY AND OBJECT
     public  Player player = new Player(this,keyH);
@@ -108,47 +112,20 @@ public class GamePanel extends JPanel implements Runnable{
         entityList.clear();
 
         player.setDefaultPositions();
-        player.restoreLifeAndMana();
-
+        player.restoreStatus();
+        player.resetCounter();
         aSetter.setNPC();
         aSetter.setMonster();
+//        stopMusic();
         playMusic(0);
         if(restart == true){
             player.setDefaultValues();
-            player.setItems();
             aSetter.setObject();
             aSetter.setInteractive();
+            eManager.lighting.resetDay();
         }
     }
-//    public void retry(){
-//        particleList.clear();
-//        entityList.clear();
-//
-//        player.setDefaultPositions();
-//        player.restoreLifeAndMana();
-//
-//        aSetter.setNPC();
-//        aSetter.setMonster();
-//        playMusic(0);
-//    }
-//    public void restart(){
-//        particleList.clear();
-//        entityList.clear();
-//
-//        //SET BY DEFAULT POSITION PLAYER
-//        player.setDefaultValues();
-//        player.setDefaultPositions();
-//        player.restoreLifeAndMana();
-//        player.setItems();
-//
-//        //RESET ENTITY
-//        aSetter.setObject();
-//        aSetter.setNPC();
-//        aSetter.setMonster();
-//        aSetter.setInteractive();
-//
-//        stopMusic();
-//    }
+
     public void setFullScreen(){
         //GET LOCAL SCREEN DEVICE
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -357,35 +334,9 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
     }
-//    public void resetGame() {
-//
-//        // PLAYER
-//        player = new Player(this, keyH);
-//
-//        // ENTITIES
-//        for(int i = 0; i < npc.length; i++) npc[i] = null;
-//        for(int i = 0; i < monster.length; i++) monster[i] = null;
-//        for(int i = 0; i < obj.length; i++) obj[i] = null;
-//        for(int i = 0; i < iTile.length; i++) iTile[i] = null;
-//
-//        // LISTS
-//        projectile = null;
-//        particleList.clear();
-//        entityList.clear();
-//
-//        // RE-SET CONTENT
-//        aSetter.setObject();
-//        aSetter.setNPC();
-//        aSetter.setMonster();
-//        aSetter.setInteractive();
-//
-//        //MUSIC RESET
-//        stopMusic();
-//
-//        // STATE
-//        gameState = titleState;
-//    }
     public void playMusic(int i){
+        music.stop();
+
         music.setFile(i);
         music.play();
         music.loop();

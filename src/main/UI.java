@@ -30,6 +30,8 @@ public class UI {
     public int npcSlotRow =0;
     int subState = 0;
     int counter = 0;
+    int charIndex = 0;
+    String combinedText = "";
     public Entity npc;
 
     public UI(GamePanel gp){
@@ -202,6 +204,7 @@ public class UI {
             gp.keyH.enterPressed = false;
     }
     public void trade_select(){
+        npc.dialogueSet = 0;
         drawDialogueScreen();
 
         //DRAW WINDOW
@@ -235,8 +238,7 @@ public class UI {
             g2.drawString(">",x-24,y);
             if(gp.keyH.enterPressed == true){
                 commandNum = 0;
-                gp.gameState = gp.dialogueState;
-                currentDialogue = "See you later";
+                npc.startDialogue(npc,1);
             }
         }
 
@@ -284,9 +286,7 @@ public class UI {
         if(gp.keyH.enterPressed == true){
             if(npc.inventory.get(itemIndex).price > gp.player.coin){
                 subState = 0;
-                gp.gameState = gp.dialogueState;
-                currentDialogue = "You don't have enough coins";
-                drawDialogueScreen();
+                npc.startDialogue(npc,2);
             }
             else{
                 if(gp.player.canObtainItem(npc.inventory.get(itemIndex)) == true){
@@ -294,8 +294,7 @@ public class UI {
                 }
                 else{
                     subState = 0;
-                    gp.gameState = gp.dialogueState;
-                    currentDialogue = "Your inventory is full!";
+                    npc.startDialogue(npc,3);
                 }
             }
         }
@@ -342,8 +341,7 @@ public class UI {
                         gp.player.inventory.get(itemIndex) == gp.player.currentShield){
                     subState = 0;
                     commandNum = 0;
-                    gp.gameState = gp.dialogueState;
-                    currentDialogue ="You can't sell an equipped item!";
+                    npc.startDialogue(npc,4);
                 }
                 else{
                     if(gp.player.inventory.get(itemIndex).amount > 1){
@@ -423,50 +421,6 @@ public class UI {
                 g2.drawString(">", x - gp.tileSize, y);
             }
         }
-//        else if (titleScreenState == 1){
-//            //CLASS SELECTION SCREEN
-//            g2.setColor(Color.white);
-//            g2.setFont(g2.getFont().deriveFont(42F));
-//
-//            String text = "Select your class";
-//            int x = getXforCenteredText(text);
-//            int y = gp.tileSize *3;
-//            g2.drawString(text,x , y);
-//
-//            text = "Fighter";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize*3;
-//            g2.drawString(text,x , y);
-//            if(commandNum == 0){
-//                g2.drawString(">", x- gp.tileSize, y);
-//            }
-//
-//            text = "Shooter";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize;
-//            g2.drawString(text,x , y);
-//            if(commandNum == 1){
-//                g2.drawString(">", x- gp.tileSize, y);
-//            }
-//
-//            text = "Peaceful";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize;
-//            g2.drawString(text,x , y);
-//            if(commandNum == 2){
-//                g2.drawString(">", x- gp.tileSize, y);
-//            }
-//
-//            text = "Back";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize*2;
-//            g2.drawString(text,x , y);
-//            if(commandNum == 3){
-//                g2.drawString(">", x- gp.tileSize, y);
-//            }
-//
-//        }
-
     }
     public void drawPauseScreen(){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,80F));
@@ -488,6 +442,38 @@ public class UI {
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,28F));
         x += gp.tileSize;
         y += gp.tileSize;
+
+        if(npc.dialogues[npc.dialogueSet][npc.dialogueIndex] != null){
+            currentDialogue = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
+
+            char characters[] = npc.dialogues[npc.dialogueSet][npc.dialogueIndex].toCharArray();
+
+            if(charIndex < characters.length){
+                String s =String.valueOf(characters[charIndex]);
+                combinedText = combinedText +s;
+                currentDialogue = combinedText;
+                charIndex++;
+            }
+            if(gp.keyH.enterPressed == true){
+
+                charIndex = 0;
+                combinedText ="";
+
+
+                if(gp.gameState == gp.dialogueState){
+
+                    npc.dialogueIndex++;
+                    gp.keyH.enterPressed = false;
+                }
+            }
+        }
+        else{
+            npc.dialogueIndex = 0;
+            if(gp.gameState == gp.dialogueState ){
+                gp.gameState = gp.playState;
+            }
+        }
+
 
         for(String line: currentDialogue.split("\n")){
             g2.drawString(line,x, y);
@@ -582,7 +568,7 @@ public class UI {
         g2.drawString(value,textX,textY);
         textY += lineHeight;
 
-        value = String.valueOf(gp.player.nexLevelExp);
+        value = String.valueOf(gp.player.nextLevelExp);
         textX = getXforAlginToRightText(value,tailX);
         g2.drawString(value,textX,textY);
         textY += lineHeight;
@@ -947,7 +933,7 @@ public class UI {
             g2.drawString(">",textX -24, textY);
             if(gp.keyH.enterPressed == true){
                 subState =0;
-//                gp.resetGame();
+                gp.gameState = gp.titleState;
                 gp.resetGameFinal(true);
             }
         }

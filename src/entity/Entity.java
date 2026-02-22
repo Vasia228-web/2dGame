@@ -23,7 +23,7 @@ public class Entity {
     public Rectangle attackArea = new Rectangle(0,0,0,0);
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
-    String dialogues[] =new String[20];
+    public String dialogues[][] =new String[20][20];
     public Entity attacker;
 
     //STATE
@@ -31,7 +31,8 @@ public class Entity {
     public boolean collision = false;
     public boolean invincible = false;
     public int spriteNum = 1 ;
-    int dialogueIndex =0;
+    public int dialogueSet = 0;
+    public int dialogueIndex =0;
     public String direction = "down";
     public boolean attacking = false;
     public boolean alive = true;
@@ -43,6 +44,8 @@ public class Entity {
     public boolean guard = false;
     public boolean transparent = false;
     public boolean offBalance = false;
+    public boolean opened = false;
+    public Entity loot;
 
     //COUNTER
     public int spriteCounter =0;
@@ -70,7 +73,7 @@ public class Entity {
     public int attack;
     public int defense;
     public int exp;
-    public int nexLevelExp;
+    public int nextLevelExp;
     public int coin;
     public int motion1_duration;
     public int motion2_duration;
@@ -159,8 +162,20 @@ public class Entity {
         }
         return oppositeDirection;
     }
+    public void resetCounter(){
+        spriteCounter =0;
+        invincibleCounter = 0;
+        actionLockCounter = 0;
+        dyingCounter = 0;
+        shotAvailableCounter = 0;
+        hpBarCounter =0;
+        knockBackCounter = 0;
+        guardCounter = 0;
+        offBalanceCounter = 0;
+    }
     public void interact(){}
     public void setAction(){}
+    public void setLoot(Entity loot){}
     public void damageReaction(){}
     public void checkDrop(){}
     public void checkStopChasingOrNot(Entity target, int distance, int rate){
@@ -264,14 +279,8 @@ public class Entity {
             }
         }
     }
-    public void speak(){
-
-        if(dialogues[dialogueIndex] == null){
-            dialogueIndex = 0;
-        }
-        gp.ui.currentDialogue = dialogues[dialogueIndex];
-        dialogueIndex++;
-
+    public void speak(){}
+    public void turnToPLayer(){
         switch (gp.player.direction){
             case "up":
                 direction ="down";
@@ -286,7 +295,11 @@ public class Entity {
                 direction ="right";
                 break;
         }
-
+    }
+    public void startDialogue(Entity entity, int setNum){
+        gp.gameState = gp.dialogueState;
+        gp.ui.npc = entity;
+        dialogueSet = setNum;
     }
     public boolean use(Entity entity){return false;}
     public Color getParticleColor(){
