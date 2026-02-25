@@ -47,6 +47,7 @@ public class Player extends Entity{
     }
 
     public void setDefaultPositions(){
+        gp.currentMap = 0;
         worldX = gp.tileSize *23;
         worldY = gp.tileSize *21;
         direction = "down";
@@ -176,6 +177,16 @@ public class Player extends Entity{
             attackRight1 = setup("/res/player/boy_axe_right_1", gp.tileSize * 2, gp.tileSize);
             attackRight2 = setup("/res/player/boy_axe_right_2", gp.tileSize * 2, gp.tileSize);
         }
+        if(currentWeapon.type == type_pickaxe){
+            attackUp1 = setup("/res/player/boy_pick_up_1", gp.tileSize, gp.tileSize * 2);
+            attackUp2 = setup("/res/player/boy_pick_up_2", gp.tileSize, gp.tileSize * 2);
+            attackDown1 = setup("/res/player/boy_pick_down_1", gp.tileSize, gp.tileSize * 2);
+            attackDown2 = setup("/res/player/boy_pick_down_2", gp.tileSize, gp.tileSize * 2);
+            attackLeft1 = setup("/res/player/boy_pick_left_1", gp.tileSize * 2, gp.tileSize);
+            attackLeft2 = setup("/res/player/boy_pick_left_2", gp.tileSize * 2, gp.tileSize);
+            attackRight1 = setup("/res/player/boy_pick_right_1", gp.tileSize * 2, gp.tileSize);
+            attackRight2 = setup("/res/player/boy_pick_right_2", gp.tileSize * 2, gp.tileSize);
+        }
     }
     public void update(){
 
@@ -236,6 +247,7 @@ public class Player extends Entity{
                     direction = "right";
                 }
 
+
                 //check tile collission
                 collisionOn = false;
                 gp.cChecker.checkTile(this);
@@ -255,10 +267,13 @@ public class Player extends Entity{
                 //CHECK INTERACTIVETILE COLLISION
                 int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
 
+                //DEBUG GOD MODE!!!
+                if (keyH.godMode == true) {
+                    collisionOn = false;
+                }
 
             //CHECK EVENT
                 gp.eHandler.cheackEvent();
-
 
                 //if collision is false player can move
                 if(collisionOn == false && keyH.enterPressed == false){
@@ -327,11 +342,26 @@ public class Player extends Entity{
             if(mana > maxMana){
                 mana = maxMana;
             }
-            if(life <= 0){
-                gp.gameState = gp.gameOverState;
-                gp.stopMusic();
-                gp.playSE(11);
+            //DEBUD GOD MOD!!!
+            if(keyH.godMode == false){
+                speed = defaultSpeed;
+
+                if(life <= 0){
+                    gp.gameState = gp.gameOverState;
+                    gp.stopMusic();
+                    gp.playSE(11);
+                }
             }
+            else{
+                godMode();
+            }
+
+    }
+    //DEBUG GOD MODE
+    public void godMode(){
+        collisionOn = false;
+        speed = defaultSpeed + 5;
+        life = maxLife;
     }
     public void pickUpObject(int i ){
         if(i != 999){
@@ -363,11 +393,12 @@ public class Player extends Entity{
         }
     }
     public void interactNPC(int i){
+        if(i != 999){
         if(gp.keyH.enterPressed == true){
-            if(i != 999){
                 attackCanceled = true;
                 gp.npc[gp.currentMap][i].speak();
             }
+            gp.npc[gp.currentMap][i].move(direction);
         }
     }
     public void сontactMonster(int i){
@@ -493,7 +524,7 @@ public class Player extends Entity{
 
                 Entity selectedItem = inventory.get(itemIndex);
 
-                if (selectedItem.type == type_sword || selectedItem.type == type_axe) {
+                if (selectedItem.type == type_sword || selectedItem.type == type_axe || selectedItem.type == type_pickaxe) {
                     currentWeapon = selectedItem;
                     attack = getAttack();
                     getAttackImage();
@@ -577,11 +608,12 @@ public class Player extends Entity{
         if(transparent == true){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.4f));
         }
-        g2.drawImage(image, tempScreenX, tempScreenY, null);
+        if(drawing == true){
+            g2.drawImage(image, tempScreenX, tempScreenY, null);
+        }
         // RESET ALPHA
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));
 
 
     }
-
 }

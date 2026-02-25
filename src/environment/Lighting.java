@@ -28,7 +28,7 @@ public class Lighting {
         Graphics2D g2 = (Graphics2D) darknessFilter.getGraphics();
 
         if(gp.player.currentLight == null){
-            g2.setColor(new Color(0,0,0,0.98f));
+            g2.setColor(new Color(0,0,0,0.97f));
         }
         else{
             //GET THE CENTER X AND Y OF THE LIGHT CIRCLE
@@ -48,8 +48,8 @@ public class Lighting {
             color[7]  = new Color(0, 0, 0.1f, 0.60f);
             color[8]  = new Color(0, 0, 0.1f, 0.80f);
             color[9]  = new Color(0, 0, 0.01f, 0.92f);
-            color[10] = new Color(0, 0, 0.001f, 0.96f);
-            color[11] = new Color(0, 0, 0, 0.98f);
+            color[10] = new Color(0, 0, 0.001f, 0.94f);
+            color[11] = new Color(0, 0, 0, 0.96f);
 
             fraction[0]  = 0.0f;
             fraction[1]  = 0.1f;
@@ -120,8 +120,12 @@ public class Lighting {
     }
 
     public void draw(Graphics2D g2 ){
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, filterAlpha));
-        g2.drawImage(darknessFilter,0,0, null);
+        if(gp.currentArea == gp.outside){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, filterAlpha));
+        }
+        if(gp.currentArea == gp.outside || gp.currentArea == gp.dungeon){
+            g2.drawImage(darknessFilter,0,0, null);
+        }
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 }

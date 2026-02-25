@@ -22,6 +22,4 @@ public class IT_Trunk extends interactiveTile{
 
     }
 
-
-
 }

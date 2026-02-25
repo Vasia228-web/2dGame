@@ -1,5 +1,6 @@
 package main;
 
+import data.Progress;
 import entity.Entity;
 
 import java.awt.*;
@@ -62,11 +63,26 @@ public class EventHandler {
            else if(hit(0,23,12,"up") == true){
                 healinPool(gp.dialogueState);
             }
-           else if(hit(0,10,39,"any") == true){
-                teleport(1,12,13);
+           else if(hit(0,10,39,"any") == true){//TO THE MERCHANT HUT
+                teleport(1,12,13,gp.indoor);
             }
-           else if(hit(1,12,13,"any") == true){
-                teleport(0,10,39);
+           else if(hit(1,12,13,"any") == true){//TO OUTSIDE
+                teleport(0,10,39,gp.outside);
+            }
+            else if(hit(0,12,9,"any") == true){//TO THE DUNGEON
+                teleport(2,9,41,gp.dungeon);
+            }
+            else if(hit(2,9,41,"any") == true){//TO OUTSIDE
+                teleport(0,12,9,gp.outside);
+            }
+            else if(hit(2,8,7,"any") == true){//TO FLOOR 2
+                teleport(3,21,41, gp.dungeon);
+            }
+            else if(hit(3,26,41,"any") == true){// TO FLOOR 1
+                teleport(2,8,7,gp.dungeon);
+            }
+            else if(hit(3,25,27,"any") == true){// TO FLOOR 2
+                skeletonLord();
             }
         }
     }
@@ -115,12 +131,19 @@ public class EventHandler {
             gp.saveLoad.save();
         }
     }
-    public void teleport(int map,int col,int row){
+    public void teleport(int map,int col,int row, int area){
         gp.gameState = gp.transitionState;
+        gp.nextArea = area;
         tempMap = map;
         tempCol = col;
         tempRow = row;
         canTouchEvent = false;
         gp.playSE(12);
+    }
+    public void skeletonLord(){
+        if(gp.boosBattleOn == false && Progress.skeletonLordDefeated == false){
+            gp.gameState = gp.cutsceneState;
+            gp.csManager.sceneNum = gp.csManager.skeletonLord;
+        }
     }
 }

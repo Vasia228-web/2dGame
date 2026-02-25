@@ -62,7 +62,47 @@ public class UI {
         message.add(text);
         messageCounter.add(0);
     }
+    public void drawMonsterLife(){
 
+        for(int i = 0; i < gp.monster[gp.currentMap].length; i++){
+
+            Entity monster = gp.monster[gp.currentMap][i];
+
+            if(monster != null&& monster.inCamera() == true){
+                if(monster.hpBarOn == true && monster.boss == false){
+                    double oneScale = (double)gp.tileSize/monster.maxLife;
+                    double hpBarValue = oneScale* monster.life;
+
+                    g2.setColor(new Color(35, 35, 35));
+                    g2.fillRect(monster.getScreenX() - 1 , monster.getScreenY() - 16, gp.tileSize + 2 ,12);
+
+                    g2.setColor(new Color(255, 0, 30));
+                    g2.fillRect(monster.getScreenX() , monster.getScreenY()-15, (int)hpBarValue ,10);
+                    monster.hpBarCounter++;
+                    if(monster.hpBarCounter == 600){
+                        monster.hpBarOn = false;
+                        monster. hpBarCounter = 0;
+                    }
+                } else if (monster.boss == true) {
+                    double oneScale = (double)gp.tileSize * 8/monster.maxLife;
+                    double hpBarValue = oneScale* monster.life;
+
+                    int x = gp.screenWidth /2 - gp.tileSize * 4;
+                    int y = gp.tileSize * 10;
+
+                    g2.setColor(new Color(35, 35, 35));
+                    g2.fillRect(x- 1 , y- 1, gp.tileSize* 8 + 2 ,22);
+
+                    g2.setColor(new Color(255, 0, 30));
+                    g2.fillRect(x, y, (int)hpBarValue ,20);
+
+                    g2.setFont(g2.getFont().deriveFont(Font.BOLD,24f));
+                    g2.setColor(Color.white);
+                    g2.drawString(monster.name, x +4, y- 10);
+                }
+            }
+        }
+    }
     public void draw(Graphics2D g2) {
         this.g2 = g2;
 
@@ -78,6 +118,7 @@ public class UI {
         if(gp.gameState == gp.playState){
             drawPlayerLife();
             drawMessage();
+            drawMonsterLife();
         }
 
         //  PAUSE STATE
@@ -139,60 +180,70 @@ public class UI {
             }
         }
     }
-    //HERE WE DRAW PLAYER HEART AND PLAYER MANACRYSTAL.
-    public void drawPlayerLife(){
-
+    public void drawPlayerLife() {
         int x = gp.tileSize / 2;
         int y = gp.tileSize / 2;
         int i = 0;
 
-        // DRAW MAX LIFE
-        while(i < gp.player.maxLife / 2){
-            g2.drawImage(heart_blank, x, y, null);
+        int iconSize = 32;
+        int manaSize = 32;
+        int spacing = 34;
+
+        while (i < gp.player.maxLife / 2) {
+            g2.drawImage(heart_blank, x, y, iconSize, iconSize, null);
             i++;
-            x += gp.tileSize;
+            x += spacing;
+
+            if (i % 8 == 0) {
+                x = gp.tileSize / 2;
+                y += spacing;
+            }
         }
 
-        // RESET
+        int manaStartX = (gp.tileSize / 2) - 5;
+        int manaStartY = y + spacing + 10;
+
         x = gp.tileSize / 2;
         y = gp.tileSize / 2;
         i = 0;
-
         int life = gp.player.life;
 
-        // DRAW CURRENT LIFE
-        while(i < gp.player.maxLife / 2){
-
-            if(life >= 2){
-                g2.drawImage(heart_full, x, y, null);
+        while (i < gp.player.maxLife / 2) {
+            if (life >= 2) {
+                g2.drawImage(heart_full, x, y, iconSize, iconSize, null);
                 life -= 2;
-            }
-            else if(life == 1){
-                g2.drawImage(heart_half, x, y, null);
+            } else if (life == 1) {
+                g2.drawImage(heart_half, x, y, iconSize, iconSize, null);
                 life -= 1;
             }
 
             i++;
-            x += gp.tileSize;
+            x += spacing;
+
+            if (i % 8 == 0) {
+                x = gp.tileSize / 2;
+                y += spacing;
+            }
         }
 
-        //DRAW MAX MANACRYSTAL
-        x = (gp.tileSize /2)+5;
-        y = (int)(gp.tileSize * 1.5);
-        i =0;
-        while(i < gp.player.maxMana){
-            g2.drawImage(mana_blank,x,y,null);
+        x = manaStartX;
+        y = manaStartY;
+        i = 0;
+
+        while (i < gp.player.maxMana) {
+            g2.drawImage(mana_blank, x, y, manaSize, manaSize, null);
             i++;
-            x += 40;
+            x += 35;
         }
-        //DRAW MANA
-        x = (gp.tileSize /2)+5;
-        y = (int)(gp.tileSize * 1.5);
-        i =0;
-        while(i < gp.player.mana){
-            g2.drawImage(mana_full,x,y,null);
+
+        x = manaStartX;
+        y = manaStartY;
+        i = 0;
+
+        while (i < gp.player.mana) {
+            g2.drawImage(mana_full, x, y, manaSize, manaSize, null);
             i++;
-            x += 40;
+            x += 35;
         }
     }
     public void drawTradeScreen(){
@@ -460,7 +511,7 @@ public class UI {
                 combinedText ="";
 
 
-                if(gp.gameState == gp.dialogueState){
+                if(gp.gameState == gp.dialogueState || gp.gameState == gp.cutsceneState){
 
                     npc.dialogueIndex++;
                     gp.keyH.enterPressed = false;
@@ -471,6 +522,9 @@ public class UI {
             npc.dialogueIndex = 0;
             if(gp.gameState == gp.dialogueState ){
                 gp.gameState = gp.playState;
+            }
+            if(gp.gameState == gp.cutsceneState){
+                gp.csManager.scenePhase++;
             }
         }
 
@@ -961,6 +1015,7 @@ public class UI {
             gp.player.worldY = gp.tileSize * gp.eHandler.tempRow;
             gp.eHandler.previousEventX = gp.player.worldX;
             gp.eHandler.previousEventY = gp.player.worldY;
+            gp.changeArea();
         }
     }
     public void drawSubWindow(int x , int y, int width, int height){

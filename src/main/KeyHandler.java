@@ -6,10 +6,12 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     GamePanel gp;
-    public boolean upPressed, downPressed,  leftPressed, rightPressed , enterPressed, shotKeyPressed, spacePressed;
+    public boolean upPressed, downPressed,  leftPressed, rightPressed ,
+            enterPressed, shotKeyPressed, spacePressed;
 
     // DEBUG
     boolean showDebugText = false;
+    public boolean godMode = false;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -35,7 +37,7 @@ public class KeyHandler implements KeyListener {
             pauseState(code);
         }
             //DIALOGUE STATE
-        else if(gp.gameState == gp.dialogueState){
+        else if(gp.gameState == gp.dialogueState || gp.gameState == gp.cutsceneState ){
             dialogueState(code);
         }
             //CHARACTER STATE
@@ -95,6 +97,7 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_M) {
             gp.gameState = gp.mapState;
         }
+
         if (code == KeyEvent.VK_N) {
             if(gp.map.miniMap == false){
                 gp.map.miniMap = true;
@@ -109,6 +112,14 @@ public class KeyHandler implements KeyListener {
                 showDebugText = true;
             } else if (showDebugText == true) {
                 showDebugText = false;
+            }
+        }
+        //DEBUG GOD MOD
+        if (code == KeyEvent.VK_I) {
+            if(godMode == false){
+                godMode = true;
+            } else {
+                godMode = false;
             }
         }
         if (code == KeyEvent.VK_R) {

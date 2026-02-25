@@ -1,5 +1,5 @@
 package main;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class  Main {
 
@@ -10,7 +10,7 @@ public class  Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("GAME FOR FREAKS");
-
+        new Main().setIcon();
 
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
@@ -29,6 +29,11 @@ public class  Main {
         gamePanel.setupGame();
         gamePanel.startGameThread();
 
+
     }
-    
+    public void setIcon() {
+        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("res/player/boy_down_1.png"));
+        window.setIconImage(icon.getImage());
+    }
 }
+
